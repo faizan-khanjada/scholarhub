@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-12 bg-slate-50 dark:bg-slate-900 min-h-screen transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-10">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Admin Dashboard</h1>
+                <p class="text-slate-600 dark:text-slate-400 mt-1">Overview of system statistics and recent
+                    applications.</p>
+            </div>
+            <div class="flex gap-4 mt-4 md:mt-0">
+                <a href="{{ url_for('admin_scholarships') }}"
+                    class="inline-flex items-center px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg font-semibold shadow-sm hover:shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 active:scale-95">
+                    <i class="fas fa-list mr-2"></i> Manage Scholarships
+                </a>
+                <a href="{{ url_for('fetch_external_scholarships') }}"
+                    class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white border border-transparent rounded-lg font-semibold shadow-md hover:shadow-xl hover:bg-indigo-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 active:scale-95">
+                    <i class="fas fa-cloud-download-alt mr-2"></i> Fetch External Data
+                </a>
+                <a href="{{ url_for('add_scholarship') }}"
+                    class="inline-flex items-center px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg font-semibold shadow-sm hover:shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 active:scale-95">
+                    <i class="fas fa-plus mr-2"></i> Add Scholarship
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10" data-aos="fade-up">
+            <div
+                class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-colors duration-300">
+                <div class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Total Users</div>
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">{{ stats.total_users }}</div>
+            </div>
+            <div
+                class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-colors duration-300">
+                <div class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Applications</div>
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">{{ stats.total_apps }}</div>
+            </div>
+            <div
+                class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-colors duration-300">
+                <div class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Scholarships</div>
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">{{ stats.total_scholarships }}</div>
+            </div>
+            <div
+                class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-colors duration-300">
+                <div class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Pending Review</div>
+                <div class="text-3xl font-bold text-orange-500">{{ stats.pending_apps }}</div>
+            </div>
+        </div>
+
+        <!-- Applications Table -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 overflow-hidden transition-colors duration-300"
+            data-aos="fade-up" data-aos-delay="200">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-700">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Recent Applications</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+                    <thead class="bg-slate-50 dark:bg-slate-700">
+                        <tr>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                                Applicant</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                                Scholarship</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                                GPA</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                                Status</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                                Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+                        {% for app in applications %}
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="text-sm font-medium text-slate-900 dark:text-white">{{ app.user_name or
+                                    'Unknown User' }}
+                                </div>
+                                <div class="text-xs text-slate-500 dark:text-slate-400">{{ app.user_email or 'N/A' }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-slate-900 dark:text-white">{{ app.scholarship_title or
+                                    'Scholarship Deleted' }}</div>
+                                <div class="text-xs text-slate-500 dark:text-slate-400">{{ app.amount or 'N/A' }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-bold text-slate-700 dark:text-slate-300">{{ app.gpa }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded-full 
+                                {% if app.status == 'Accepted' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                {% elif app.status == 'Rejected' %}bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                {% else %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200{% endif %}">
+                                    {{ app.status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex space-x-2 items-center">
+                                    <a href="{{ url_for('view_application', app_id=app.id) }}"
+                                        class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-2 transition-transform hover:scale-125 inline-block"
+                                        title="View Details"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ url_for('update_status', app_id=app.id, status='Accepted') }}"
+                                        class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 mr-2 transition-transform hover:scale-125 inline-block"
+                                        title="Accept"><i class="fas fa-check"></i></a>
+                                    <a href="{{ url_for('update_status', app_id=app.id, status='Rejected') }}"
+                                        class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-transform hover:scale-125 inline-block"
+                                        title="Reject"><i class="fas fa-times"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% block footer %}{% endblock %}
+{% endblock %}

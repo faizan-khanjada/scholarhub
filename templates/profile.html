@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-12 bg-slate-50 dark:bg-slate-900 min-h-screen transition-colors duration-300">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+            data-aos="fade-up" data-aos-duration="800">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-primary to-secondary px-8 py-10 text-center relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10">
+                </div>
+                <div class="relative z-10">
+                    <div
+                        class="w-24 h-24 bg-white rounded-full mx-auto mb-4 flex items-center justify-center text-primary text-4xl shadow-lg font-bold">
+                        {{ user.name[0].upper() }}
+                    </div>
+                    <h1 class="text-3xl font-bold text-white mb-2">My Profile</h1>
+                    <p class="text-indigo-100 font-medium">{{ user.email }}</p>
+                </div>
+            </div>
+
+            <div class="p-8">
+                <form method="POST" action="{{ url_for('profile') }}" class="space-y-6">
+                    <!-- Personal Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="name"
+                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Full Name</label>
+                            <input type="text" id="name" value="{{ user.name }}"
+                                class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-500 dark:text-slate-400 focus:outline-none cursor-not-allowed"
+                                readonly>
+                            <p class="text-xs text-slate-400">Name cannot be changed.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="email"
+                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Email
+                                Address</label>
+                            <input type="email" id="email" value="{{ user.email }}"
+                                class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-500 dark:text-slate-400 focus:outline-none cursor-not-allowed"
+                                readonly>
+                            <p class="text-xs text-slate-400">Email cannot be changed.</p>
+                        </div>
+
+                        {% if not is_admin %}
+                        <div class="space-y-2">
+                            <label for="phone"
+                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Phone
+                                Number</label>
+                            <input type="tel" id="phone" name="phone" value="{{ user.phone or '' }}"
+                                placeholder="e.g., 9876543210"
+                                class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-700 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="education_level"
+                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Education
+                                Level</label>
+                            <div class="relative">
+                                <select id="education_level" name="education_level"
+                                    class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-700 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none cursor-pointer">
+                                    <option value="" disabled {{ 'selected' if not user.education_level }}>Select your
+                                        level</option>
+                                    <option value="High School" {{ 'selected' if user.education_level=='High School' }}>
+                                        High School</option>
+                                    <option value="Undergraduate" {{ 'selected' if user.education_level=='Undergraduate'
+                                        }}>Undergraduate</option>
+                                    <option value="Graduate" {{ 'selected' if user.education_level=='Graduate' }}>
+                                        Graduate</option>
+                                    <option value="PhD" {{ 'selected' if user.education_level=='PhD' }}>PhD</option>
+                                </select>
+                                <div
+                                    class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-500">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="institution"
+                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Institution /
+                                School</label>
+                            <input type="text" id="institution" name="institution" value="{{ user.institution or '' }}"
+                                placeholder="Where are you studying?"
+                                class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-700 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="major"
+                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Major / Field of
+                                Study</label>
+                            <input type="text" id="major" name="major" value="{{ user.major or '' }}"
+                                placeholder="e.g., Computer Science"
+                                class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-700 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="space-y-2">
+                        <label for="bio" class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Short
+                            Bio / About Me</label>
+                        <textarea id="bio" name="bio" rows="4" placeholder="Tell us a bit about yourself..."
+                            class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-700 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none">{{ user.bio or '' }}</textarea>
+                    </div>
+
+                    <hr class="border-slate-100 dark:border-slate-700 my-6">
+
+                    <!-- Change Password Section (User) -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Security</h3>
+                        <div class="space-y-2">
+                            <label for="new_password_user"
+                                class="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                New Password
+                            </label>
+                            <input type="password" id="new_password_user" name="new_password"
+                                placeholder="Enter new password (leave blank to keep current)"
+                                class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-700 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Admin Specific Fields -->
+                    <div class="md:col-span-2 space-y-6">
+                        <div class="space-y-2">
+                            <label for="role" class="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Role
+                            </label>
+                            <div
+                                class="w-full px-4 py-3 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 rounded-xl text-indigo-700 dark:text-indigo-300 flex items-center">
+                                <i class="fas fa-shield-alt mr-2"></i>
+                                <span class="font-bold">{{ user.role or 'Super Admin' }}</span>
+                            </div>
+                        </div>
+
+                        <hr class="border-slate-100 dark:border-slate-700 my-6">
+
+                        <!-- Change Password Section -->
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Security</h3>
+                        <div class="space-y-4">
+                            <div class="space-y-2">
+                                <label for="new_password"
+                                    class="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                    New Password
+                                </label>
+                                <input type="password" id="new_password" name="new_password"
+                                    placeholder="Enter new password"
+                                    class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-700 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            {% endif %}
+
+            <!-- Action Buttons -->
+            <div class="pt-6 flex justify-end gap-4">
+                <a href="{{ url_for('admin_dashboard') if is_admin else url_for('dashboard') }}"
+                    class="px-6 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-white transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:scale-95">
+                    {{ 'Back to Dashboard' if is_admin else 'Cancel' }}
+                </a>
+                <button type="submit"
+                    class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold hover:bg-indigo-600 transition-all shadow-lg hover:shadow-primary/30 transform hover:-translate-y-0.5">
+                    {{ 'Update Password' if is_admin else 'Save Changes' }}
+                </button>
+            </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</section>
+{% block footer %}{% endblock %}
+{% endblock %}

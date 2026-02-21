@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section
+    class="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300">
+    <!-- Background Decor -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div
+            class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-primary/10 dark:bg-primary/5 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob">
+        </div>
+        <div
+            class="absolute top-1/4 right-1/4 w-96 h-96 bg-secondary/10 dark:bg-secondary/5 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000">
+        </div>
+    </div>
+
+    <div class="max-w-md w-full space-y-8 bg-white dark:bg-slate-800 p-10 rounded-2xl shadow-xl relative z-10 border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+        data-aos="zoom-in">
+        <div class="text-center">
+            <div
+                class="mx-auto h-16 w-16 bg-gradient-to-tr from-secondary to-pink-500 rounded-xl flex items-center justify-center text-white text-2xl mb-4 shadow-lg transform -rotate-3">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h2 class="mt-2 text-3xl font-extrabold text-slate-900 dark:text-white">Create Account</h2>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                Already have an account? <a href="{{ url_for('login') }}"
+                    class="font-medium text-secondary hover:text-pink-600 transition-colors">Sign in</a>
+            </p>
+        </div>
+
+        <form class="mt-8 space-y-6" action="{{ url_for('register') }}" method="POST">
+            <div class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full
+                        Name</label>
+                    <input id="name" name="name" type="text" required
+                        class="appearance-none relative block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 placeholder-slate-400 text-slate-900 dark:text-white bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary focus:z-10 sm:text-sm transition-all"
+                        placeholder="your name">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email
+                        address</label>
+                    <input id="email" name="email" type="email" autocomplete="email" required
+                        class="appearance-none relative block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 placeholder-slate-400 text-slate-900 dark:text-white bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary focus:z-10 sm:text-sm transition-all"
+                        placeholder="you@example.com">
+                </div>
+                <div>
+                    <label for="password"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="new-password" required
+                        class="appearance-none relative block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 placeholder-slate-400 text-slate-900 dark:text-white bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary focus:z-10 sm:text-sm transition-all"
+                        placeholder="••••••••">
+                </div>
+            </div>
+
+            <!-- <div class="flex items-center">
+                <input id="terms" name="terms" type="checkbox" required
+                    class="h-4 w-4 text-secondary focus:ring-secondary border-slate-300 rounded bg-white dark:bg-slate-700">
+                <label for="terms" class="ml-2 block text-sm text-slate-900 dark:text-slate-300">
+                    I agree to the <a href="#" class="text-secondary hover:text-pink-600 font-medium">Terms</a> and <a
+                        href="#" class="text-secondary hover:text-pink-600 font-medium">Privacy Policy</a>
+                </label>
+            </div> -->
+
+            <div>
+                <button type="submit"
+                    class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-secondary hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-all shadow-lg hover:shadow-secondary/30 transform hover:-translate-y-0.5">
+                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <i class="fas fa-arrow-right text-pink-300 group-hover:text-pink-200 transition-colors"></i>
+                    </span>
+                    Sign Up
+                </button>
+            </div>
+
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-slate-300 dark:border-slate-600"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white dark:bg-slate-800 text-slate-500">Or continue with</span>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <a href="{{ url_for('google_login') }}"
+                        class="w-full flex items-center justify-center px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm text-sm font-medium text-slate-700 dark:text-white bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 transition-all transform hover:-translate-y-0.5">
+                        <img class="h-5 w-5 mr-3" src="https://www.svgrepo.com/show/475656/google-color.svg"
+                            alt="Google logo">
+                        Continue with Google
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% block footer %}{% endblock %}
+{% endblock %}

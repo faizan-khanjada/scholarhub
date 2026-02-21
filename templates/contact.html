@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="min-h-screen bg-slate-50 dark:bg-slate-900 py-20 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Contact Info -->
+            <div data-aos="fade-right">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">Let's
+                    start a
+                    <br><span class="text-primary">Conversation</span>
+                </h1>
+                <p class="text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed">
+                    Have questions about specific scholarships, eligibility, or the application process? Our dedicated
+                    support team is just a message away.
+                </p>
+
+                <div class="space-y-6">
+                    <div
+                        class="flex items-start gap-6 p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow">
+                        <div
+                            class="w-14 h-14 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-primary text-2xl flex-shrink-0">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-1">Global Headquarters</h3>
+                            <p class="text-slate-500 dark:text-slate-400 leading-relaxed">ScholarHub | India</p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex items-start gap-6 p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow">
+                        <div
+                            class="w-14 h-14 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl flex-shrink-0">
+                            <i class="fas fa-envelope-open-text"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-1">Email Support</h3>
+                            <p class="text-slate-500 dark:text-slate-400 mb-1"><a
+                                    href="mailto:scholarhub.connect@gmail.com"
+                                    class="hover:text-primary transition-colors">scholarhub.connect@gmail.com</a></p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex items-start gap-6 p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow">
+                        <div
+                            class="w-14 h-14 bg-amber-50 dark:bg-amber-900/30 rounded-xl flex items-center justify-center text-amber-600 dark:text-amber-400 text-2xl flex-shrink-0">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-1">Live Support</h3>
+                            <p class="text-slate-500 dark:text-slate-400 mb-1">+91 1234567890</p>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Mon-Fri, 9am-6pm IST
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+                data-aos="fade-left">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Send us a Message</h2>
+                <form action="{{ url_for('contact') }}" method="POST" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Name</label>
+                            <input type="text" name="name" value="{{ session.get('name', '') }}"
+                                class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                            <input type="email" name="email" value="{{ session.get('user', '') }}"
+                                class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Subject</label>
+                        <select name="subject"
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors">
+                            <option>General Inquiry</option>
+                            <option>Technical Support</option>
+                            <option>Partnership</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Message</label>
+                        <textarea name="message" rows="4"
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"></textarea>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full px-6 py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-lg hover:shadow-lg hover:shadow-primary/40 transition-all transform hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.98]">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-20 bg-white dark:bg-slate-900 transition-colors duration-300">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Frequently Asked Questions</h2>
+            <p class="text-slate-600 dark:text-slate-400 mt-2">Quick answers to common questions about scholarships and
+                applications.</p>
+        </div>
+
+        <div class="space-y-4">
+            <!-- FAQ Item 1 -->
+            <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden transition-colors"
+                data-aos="fade-up">
+                <button
+                    class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 transition-colors focus:outline-none">
+                    <span class="font-bold text-slate-800 dark:text-slate-200">How do I apply for a scholarship?</span>
+                    <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                </button>
+                <div
+                    class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white dark:bg-slate-800">
+                    <div
+                        class="px-6 py-4 text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-700">
+                        Creating an account is the first step. Once logged in, browse our scholarship directory, click
+                        "View
+                        Details" on any opportunity, and follow the simple application form instructions.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 2 -->
+            <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden transition-colors"
+                data-aos="fade-up" data-aos-delay="100">
+                <button
+                    class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 transition-colors focus:outline-none">
+                    <span class="font-bold text-slate-800 dark:text-slate-200">Is ScholarHub free to use?</span>
+                    <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                </button>
+                <div
+                    class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white dark:bg-slate-800">
+                    <div
+                        class="px-6 py-4 text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-700">
+                        Yes! ScholarHub is completely free for students. We believe in open access to education funding
+                        and
+                        do not charge any application or membership fees.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 3 -->
+            <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden transition-colors"
+                data-aos="fade-up" data-aos-delay="200">
+                <button
+                    class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 transition-colors focus:outline-none">
+                    <span class="font-bold text-slate-800 dark:text-slate-200">When will I hear back about my
+                        application?</span>
+                    <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                </button>
+                <div
+                    class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white dark:bg-slate-800">
+                    <div
+                        class="px-6 py-4 text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-700">
+                        Timelines vary by scholarship provider, but typically you can expect to hear back within 4-6
+                        weeks
+                        after the application deadline. You can track your status in the Dashboard.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 4 -->
+            <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden transition-colors"
+                data-aos="fade-up" data-aos-delay="300">
+                <button
+                    class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 transition-colors focus:outline-none">
+                    <span class="font-bold text-slate-800 dark:text-slate-200">Can I apply for multiple
+                        scholarships?</span>
+                    <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                </button>
+                <div
+                    class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white dark:bg-slate-800">
+                    <div
+                        class="px-6 py-4 text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-700">
+                        Absolutely! We encourage you to apply for as many scholarships as you are eligible for to
+                        increase your chances of securing funding.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 5 -->
+            <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden transition-colors"
+                data-aos="fade-up" data-aos-delay="400">
+                <button
+                    class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 transition-colors focus:outline-none">
+                    <span class="font-bold text-slate-800 dark:text-slate-200">What documents do I need to
+                        prepare?</span>
+                    <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                </button>
+                <div
+                    class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white dark:bg-slate-800">
+                    <div
+                        class="px-6 py-4 text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-700">
+                        Common documents include academic transcripts, letters of recommendation, and identification
+                        proof. However, specific requirements are listed on each scholarship's detail page.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 6 -->
+            <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden transition-colors"
+                data-aos="fade-up" data-aos-delay="500">
+                <button
+                    class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 transition-colors focus:outline-none">
+                    <span class="font-bold text-slate-800 dark:text-slate-200">How do I update my profile
+                        information?</span>
+                    <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                </button>
+                <div
+                    class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white dark:bg-slate-800">
+                    <div
+                        class="px-6 py-4 text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-700">
+                        You can keep your personal details and academic information up to date by visiting the <a
+                            href="{{ url_for('profile') }}" class="text-primary hover:underline">My Profile</a> section
+                        in your dashboard.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const faqButtons = document.querySelectorAll('.faq-btn');
+
+        faqButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+                // Close all other FAQs
+                faqButtons.forEach(otherButton => {
+                    if (otherButton !== button) {
+                        const otherContent = otherButton.nextElementSibling;
+                        const otherIcon = otherButton.querySelector('i');
+
+                        otherContent.style.maxHeight = '0px';
+                        otherIcon.classList.remove('rotate-180');
+                        otherButton.classList.remove('bg-slate-100'); // Optional active state
+                    }
+                });
+
+                // Toggle current
+                if (isOpen) {
+                    content.style.maxHeight = '0px';
+                    icon.classList.remove('rotate-180');
+                    button.classList.remove('bg-slate-100');
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    icon.classList.add('rotate-180');
+                    button.classList.add('bg-slate-100');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

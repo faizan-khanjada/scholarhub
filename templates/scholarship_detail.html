@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-12 bg-slate-50 dark:bg-slate-900 min-h-screen transition-colors duration-300">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <a href="{{ url_for('scholarships_page') }}"
+            class="inline-flex items-center text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary mb-8 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Scholarships
+        </a>
+
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+            data-aos="fade-up">
+            <div class="bg-gradient-to-r from-primary to-secondary h-4"></div>
+            <div class="p-8 md:p-10">
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <span
+                                class="px-3 py-1 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-300 rounded-full text-sm font-semibold uppercase tracking-wide">
+                                {{ scholarship.type }}
+                            </span>
+                            <span
+                                class="px-3 py-1 bg-yellow-50 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-300 rounded-full text-sm font-semibold uppercase tracking-wide">
+                                {{ scholarship.level }}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white leading-tight">{{
+                                scholarship.title }}
+                            </h1>
+                            <button onclick="toggleSaveDetail(event, '{{ scholarship_id }}')" id="save-btn-detail"
+                                class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-primary transition-all duration-300"
+                                title="Save for later">
+                                <i class="{{ 'fas text-primary' if is_saved else 'far' }} fa-bookmark text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-3xl font-bold text-primary">{{ scholarship.amount }}</div>
+                        <div class="text-slate-500 dark:text-slate-400 text-sm mt-1">Award Amount</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div
+                        class="bg-slate-50 dark:bg-slate-700/50 p-6 rounded-xl border border-slate-100 dark:border-slate-600">
+                        <div class="flex items-center gap-3 mb-2 text-slate-700 dark:text-slate-200 font-semibold">
+                            <i class="far fa-clock text-primary"></i> Deadline
+                        </div>
+                        <p class="text-slate-900 dark:text-white text-lg">{{ scholarship.deadline }}</p>
+                    </div>
+                    <div
+                        class="bg-slate-50 dark:bg-slate-700/50 p-6 rounded-xl border border-slate-100 dark:border-slate-600">
+                        <div class="flex items-center gap-3 mb-2 text-slate-700 dark:text-slate-200 font-semibold">
+                            <i class="fas fa-check-circle text-green-500"></i> Eligibility
+                        </div>
+                        <p class="text-slate-900 dark:text-white">{{ scholarship.eligibility }}</p>
+                    </div>
+                </div>
+
+                <div class="mb-10">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Description</h3>
+                    <div
+                        class="prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed">
+                        {{ scholarship.description }}
+                    </div>
+                </div>
+
+                <div
+                    class="border-t border-slate-100 dark:border-slate-700 pt-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="text-slate-500 dark:text-slate-400 text-sm">
+                        <i class="fas fa-info-circle mr-1"></i> Make sure to read all requirements before applying.
+                    </div>
+                    <a href="{{ url_for('apply', scholarship_id=scholarship.id) }}"
+                        class="w-full md:w-auto px-8 py-3 bg-primary text-white text-center rounded-lg font-bold hover:bg-indigo-600 transition-all shadow-lg hover:shadow-primary/30 transform hover:-translate-y-0.5">
+                        Apply Now <i class="fas fa-paper-plane ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleSaveDetail(event, id) {
+        const btn = document.getElementById('save-btn-detail');
+        const icon = btn.querySelector('i');
+
+        fetch(`/api/save/${id}`, { method: 'POST' })
+            .then(response => {
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.status === 'saved') {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas', 'text-primary');
+                    showToast('Scholarship saved to your list!', 'success');
+                } else if (data && data.status === 'removed') {
+                    icon.classList.remove('fas', 'text-primary');
+                    icon.classList.add('far');
+                    showToast('Scholarship removed from saved list.', 'info');
+                }
+            })
+            .catch(err => console.error('Error saving:', err));
+    }
+</script>
+{% endblock %}
+{% block footer %}{% endblock %}

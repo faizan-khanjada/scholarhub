@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-12 bg-slate-50 dark:bg-slate-900 min-h-screen transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Deadline Alerts -->
+        {% if deadline_alerts %}
+        <div class="mb-8" data-aos="fade-down">
+            <div class="bg-amber-50 dark:bg-amber-900/30 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-sm">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-amber-500 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-amber-800 dark:text-amber-200">
+                            Upcoming Deadlines
+                        </h3>
+                        <div class="mt-2 text-sm text-amber-700 dark:text-amber-300">
+                            <ul class="list-disc pl-5 space-y-1">
+                                {% for alert in deadline_alerts %}
+                                <li>
+                                    <span class="font-semibold">{{ alert.title }}</span> is expiring in
+                                    <span class="font-bold">{{ 'today' if alert.days_left == 0 else alert.days_left ~ '
+                                        day(s)' }}</span>.
+                                    <a href="{{ url_for('scholarship_detail', scholarship_id=alert.id) }}"
+                                        class="underline hover:text-amber-900 dark:hover:text-white ml-1">View
+                                        Details</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-10" data-aos="fade-down">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Student Dashboard</h1>
+                <p class="text-slate-600 dark:text-slate-400 mt-1">Welcome back, <span
+                        class="text-primary font-semibold">{{ session.name
+                        }}</span>! Here's an overview of your applications.</p>
+            </div>
+            <a href="{{ url_for('scholarships_page') }}"
+                class="mt-4 md:mt-0 inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-indigo-600 transition-colors shadow-md">
+                <i class="fas fa-plus mr-2"></i> Apply for More
+            </a>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <!-- Total Applications -->
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+                data-aos="fade-up" data-aos-delay="0">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300">Total Applications</h3>
+                    <div
+                        class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-200">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                </div>
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">{{ applications|length }}</div>
+            </div>
+
+            <!-- Pending -->
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+                data-aos="fade-up" data-aos-delay="100">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300">Pending</h3>
+                    <div
+                        class="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center text-yellow-600 dark:text-yellow-200">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">
+                    {% set pending_count = namespace(value=0) %}
+                    {% for app in applications %}
+                    {% if app.status == 'Pending' %}{% set pending_count.value = pending_count.value + 1 %}{% endif %}
+                    {% endfor %}
+                    {{ pending_count.value }}
+                </div>
+            </div>
+
+            <!-- Accepted -->
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+                data-aos="fade-up" data-aos-delay="200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300">Accepted</h3>
+                    <div
+                        class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-200">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">
+                    {% set accepted_count = namespace(value=0) %}
+                    {% for app in applications %}
+                    {% if app.status == 'Accepted' %}{% set accepted_count.value = accepted_count.value + 1 %}{% endif
+                    %}
+                    {% endfor %}
+                    {{ accepted_count.value }}
+                </div>
+            </div>
+
+            <!-- Rejected -->
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+                data-aos="fade-up" data-aos-delay="300">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300">Rejected</h3>
+                    <div
+                        class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-600 dark:text-red-200">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                </div>
+                <div class="text-3xl font-bold text-slate-900 dark:text-white">
+                    {% set rejected_count = namespace(value=0) %}
+                    {% for app in applications %}
+                    {% if app.status == 'Rejected' %}{% set rejected_count.value = rejected_count.value + 1 %}{% endif
+                    %}
+                    {% endfor %}
+                    {{ rejected_count.value }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Scholarships -->
+        {% if saved_scholarships %}
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6 mt-12" data-aos="fade-up">Saved Scholarships
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12" data-aos="fade-up">
+            {% for scholarship in saved_scholarships %}
+            <div
+                class="bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden border border-slate-100 dark:border-slate-700 hover:shadow-lg transition-all duration-300 relative group">
+                <div class="h-2 bg-gradient-to-r from-primary to-secondary"></div>
+                <div class="p-5 flex flex-col h-full">
+                    <button data-id="{{ scholarship.id }}" onclick="toggleSaveDashboard(event, this.dataset.id)"
+                        class="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors z-10"
+                        title="Remove from saved">
+                        <i class="fas fa-times"></i>
+                    </button>
+
+                    <div class="mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-primary">{{ scholarship.type
+                            }}</span>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2 line-clamp-2">
+                        <a href="{{ url_for('scholarship_detail', scholarship_id=scholarship.id) }}"
+                            class="hover:text-primary transition-colors">
+                            {{ scholarship.title }}
+                        </a>
+                    </h3>
+
+                    <div class="mt-auto pt-4 flex items-center justify-between text-sm">
+                        <span class="text-slate-500 dark:text-slate-400">
+                            <i class="far fa-clock mr-1"></i> {{ scholarship.deadline }}
+                        </span>
+                        <a href="{{ url_for('scholarship_detail', scholarship_id=scholarship.id) }}"
+                            class="text-primary font-medium hover:underline">
+                            Details &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Recent Applications -->
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6" data-aos="fade-up">Recent Applications</h2>
+
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-md overflow-hidden border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+            data-aos="fade-up">
+            {% if applications %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+                    <thead class="bg-slate-50 dark:bg-slate-700">
+                        <tr>
+                            <th scope="col"
+                                class="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                                Scholarship</th>
+                            <th scope="col"
+                                class="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                                Applied Date</th>
+                            <th scope="col"
+                                class="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                                Amount</th>
+                            <th scope="col"
+                                class="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                                Status</th>
+                            <th scope="col"
+                                class="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                                Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+                        {% for app in applications %}
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-slate-900 dark:text-white">
+                                    {{ app.scholarship_title or 'Scholarship No Longer Available' }}
+                                    {% if app.doc_count > 0 %}
+                                    <span
+                                        class="inline-flex items-center ml-2 px-2 py-0.5 rounded text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
+                                        title="{{ app.doc_count }} document(s) attached">
+                                        <i class="fas fa-paperclip mr-1"></i> {{ app.doc_count }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-slate-500 dark:text-slate-400">{{ app.applied_date }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-semibold text-primary">{{ app.amount or 'N/A' }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                {% if app.status == 'Accepted' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                {% elif app.status == 'Rejected' %}bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                {% else %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200{% endif %}">
+                                    {{ app.status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+                                <a href="{{ url_for('view_application', app_id=app.id) }}"
+                                    class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium">View
+                                    Details</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-12">
+                <div
+                    class="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400 dark:text-slate-500 text-2xl">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <h3 class="text-lg font-medium text-slate-900 dark:text-white">No applications yet</h3>
+                <p class="text-slate-500 dark:text-slate-400 mt-1 mb-6">Start your journey by applying to scholarships.
+                </p>
+                <a href="{{ url_for('scholarships_page') }}"
+                    class="text-primary font-medium hover:text-indigo-600">Browse
+                    Scholarships &rarr;</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+</section>
+{% block footer %}{% endblock %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleSaveDashboard(event, id) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!confirm('Are you sure you want to remove this scholarship from your saved list?')) {
+            return;
+        }
+
+        fetch(`/api/save/${id}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.status === 'removed') {
+                    // Remove the card from DOM
+                    const btn = event.target.closest('button');
+                    const card = btn.closest('.group');
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.remove();
+                        // If no more cards, reload to show empty state or hide section (simplest is reload or just hide)
+                        // Ideally checking remaining cards count
+                        const remaining = document.querySelectorAll('.group');
+                        if (remaining.length === 0) {
+                            window.location.reload();
+                        }
+                    }, 300);
+                    showToast('Scholarship removed from saved list.', 'info');
+                }
+            })
+            .catch(err => console.error('Error removing:', err));
+    }
+</script>
+{% endblock %}

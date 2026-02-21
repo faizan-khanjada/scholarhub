@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-12 bg-slate-50 dark:bg-slate-900 min-h-screen transition-colors duration-300">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <a href="{{ url_for('scholarship_detail', scholarship_id=scholarship.id) }}"
+            class="inline-flex items-center text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary mb-8 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Details
+        </a>
+
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+            data-aos="fade-up">
+            <div class="bg-primary/5 dark:bg-primary/10 p-8 border-b border-primary/10 dark:border-primary/20">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Apply for {{ scholarship.title }}</h2>
+                <p class="text-slate-600 dark:text-slate-300 mt-2">Please ensure all information is accurate before
+                    submitting.</p>
+            </div>
+
+            <form action="{{ url_for('apply', scholarship_id=scholarship.id) }}" method="POST"
+                enctype="multipart/form-data" class="p-8 space-y-6">
+                <!-- ... previous fields ... -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full
+                            Name</label>
+                        <input type="text" value="{{ session.name }}" disabled
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 cursor-not-allowed">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                        <input type="email" value="{{ session.user }}" disabled
+                            class="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 cursor-not-allowed">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="phone"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Phone
+                            Number</label>
+                        <input type="tel" id="phone" name="phone" required value="{{ user.phone or '' }}"
+                            class="w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors placeholder-slate-400"
+                            placeholder="Enter your phone number">
+                    </div>
+                    <div>
+                        <label for="gpa"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Current
+                            GPA</label>
+                        <input type="number" step="0.01" min="0" max="10.0" id="gpa" name="gpa" required
+                            class="w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors placeholder-slate-400"
+                            placeholder="Enter your GPA">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="major"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Major / Field of
+                            Study</label>
+                        <input type="text" id="major" name="major" required value="{{ user.major or '' }}"
+                            class="w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors placeholder-slate-400"
+                            placeholder="Computer Science">
+                    </div>
+                    <div>
+                        <label for="year"
+                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Academic
+                            Year</label>
+                        <select id="year" name="year" required
+                            class="w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
+                            <option value="">Select Year</option>
+                            <option value="High School" {{ 'selected' if user.education_level=='High School' }}>High
+                                School</option>
+                            <option value="Undergraduate" {{ 'selected' if user.education_level=='Undergraduate' }}>
+                                Undergraduate</option>
+                            <option value="Graduate" {{ 'selected' if user.education_level=='Graduate' }}>Graduate
+                            </option>
+                            <option value="PhD" {{ 'selected' if user.education_level=='PhD' }}>PhD</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Supporting
+                        Documents</label>
+                    <div
+                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-lg hover:border-primary dark:hover:border-primary transition-colors bg-slate-50 dark:bg-slate-700/50">
+                        <div class="space-y-1 text-center">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-slate-400 dark:text-slate-500 mb-3"></i>
+                            <div class="flex text-sm text-slate-600 dark:text-slate-400 justify-center">
+                                <label for="documents"
+                                    class="relative cursor-pointer bg-white dark:bg-slate-800 rounded-md font-medium text-primary hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary">
+                                    <span class="px-2">Upload files</span>
+                                    <input id="documents" name="documents" type="file" class="sr-only" multiple required
+                                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="updateFileList()">
+                                </label>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-500">
+                                PDF, DOC, IMG up to 10MB (Transcripts, Essays, ID)
+                            </p>
+                            <div id="file-list" class="mt-4 text-sm text-slate-600 dark:text-slate-400 space-y-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="goal" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Career
+                        Goals &
+                        Statement</label>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Briefly describe your academic goals and
+                        why you deserve this
+                        scholarship.</p>
+                    <textarea id="goal" name="goal" rows="5" required
+                        class="w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors placeholder-slate-400"
+                        placeholder="I aspire to become...">{{ user.bio or '' }}</textarea>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit"
+                        class="w-full px-8 py-4 bg-primary text-white font-bold rounded-lg hover:bg-indigo-600 transition-all shadow-lg hover:shadow-primary/30 transform hover:-translate-y-0.5">
+                        Submit Application
+                    </button>
+                    <p class="text-center text-xs text-slate-400 dark:text-slate-500 mt-4">By submitting, you agree to
+                        certify that all
+                        information provided is accurate.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    function updateFileList() {
+        const input = document.getElementById('documents');
+        const list = document.getElementById('file-list');
+        list.innerHTML = '';
+
+        if (input.files.length > 0) {
+            for (let i = 0; i < input.files.length; i++) {
+                const file = input.files[i];
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-center space-x-2 bg-slate-100 dark:bg-slate-700 py-1 px-3 rounded-md inline-block mr-2 mb-2';
+                item.innerHTML = `<i class="fas fa-paperclip text-slate-400"></i><span>${file.name}</span>`;
+                list.appendChild(item);
+            }
+        }
+    }
+</script>
+{% endblock %}
+{% block footer %}{% endblock %}

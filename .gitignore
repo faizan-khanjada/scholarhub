@@ -1,0 +1,16 @@
+# Virtual environment
+.venv/
+
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code settings
+.vscode/
+
+# Database and Uploads
+instance/*.db
+instance/uploads/

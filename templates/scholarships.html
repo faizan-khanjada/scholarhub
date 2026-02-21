@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="bg-slate-50 dark:bg-slate-900 py-12 min-h-screen transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12" data-aos="fade-down">
+            <h1 class="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Find Your Scholarship</h1>
+            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Browse through our extensive
+                database of scholarship
+                opportunities. Use the filters to narrow down your search.</p>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-10 border border-slate-100 dark:border-slate-700 transition-colors duration-300"
+            data-aos="fade-up">
+            <div class="flex flex-col gap-6">
+                <!-- Search -->
+                <div class="relative w-full">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="searchInput"
+                        placeholder="Search scholarships by title, amount, or criteria..."
+                        class="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-slate-700 dark:text-white placeholder-slate-400">
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-8">
+                    <!-- Education Level Filter -->
+                    <div class="w-full md:w-1/2">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Education Level</h3>
+                        <div class="flex flex-wrap gap-2" id="levelFilters">
+                            <button data-filter="all"
+                                class="filter-btn active px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:opacity-90">All</button>
+                            <button data-filter="High School"
+                                class="filter-btn px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-white rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">High
+                                School</button>
+                            <button data-filter="Undergraduate"
+                                class="filter-btn px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-white rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">Undergraduate</button>
+                            <button data-filter="Graduate"
+                                class="filter-btn px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-white rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">Graduate</button>
+                            <button data-filter="PhD"
+                                class="filter-btn px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-white rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">PhD</button>
+                        </div>
+                    </div>
+
+                    <!-- Scholarship Category Filter -->
+                    <div class="w-full md:w-1/2">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Category</h3>
+                        <div class="flex flex-wrap gap-2" id="typeFilters">
+                            <button data-filter="all"
+                                class="filter-btn active px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:opacity-90">All</button>
+                            <button data-filter="Merit-Based"
+                                class="filter-btn px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-white rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">Merit</button>
+                            <button data-filter="Need-Based"
+                                class="filter-btn px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-white rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">Need
+                                Based</button>
+                            <button data-filter="Research"
+                                class="filter-btn px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-white rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">Research</button>
+                            <button data-filter="Athletic"
+                                class="filter-btn px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-white rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">Athletic</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="flex justify-center items-center py-20">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+
+        <!-- Scholarships Grid -->
+        <div id="scholarships-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 hidden">
+            <!-- Cards will be injected here via JS -->
+        </div>
+
+        <!-- Empty State (Hidden by default) -->
+        <div id="empty-state" class="hidden text-center py-20">
+            <div
+                class="bg-slate-100 dark:bg-slate-800 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 transition-colors duration-300">
+                <i class="fas fa-search text-4xl text-slate-400"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">No scholarships found</h3>
+            <p class="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">We couldn't find any scholarships matching
+                your current filters.
+                Try adjusting your search criteria.</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    let allScholarships = [];
+    let currentLevel = 'all';
+    let currentType = 'all';
+    let searchQuery = '';
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.getElementById('scholarships-container');
+        const loading = document.getElementById('loading');
+        const emptyState = document.getElementById('empty-state');
+        const searchInput = document.getElementById('searchInput');
+
+        // Fetch Data
+        fetch('/api/scholarships')
+            .then(response => response.json())
+            .then(data => {
+                allScholarships = data;
+                loading.classList.add('hidden');
+                filterScholarships();
+            })
+            .catch(error => {
+                console.error('Error fetching scholarships:', error);
+                loading.classList.add('hidden');
+                container.innerHTML = `<div class="col-span-full text-center text-red-500">Failed to load scholarships. Please try again later.</div>`;
+                container.classList.remove('hidden');
+            });
+
+        // Search Listener
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            filterScholarships();
+        });
+
+        // Filter Listeners
+        const inactiveClasses = ['bg-slate-100', 'dark:bg-slate-700', 'text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-200', 'dark:hover:bg-slate-600', 'hover:text-slate-800', 'dark:hover:text-white'];
+        const activeClassesLevel = ['bg-primary', 'text-white', 'shadow-sm', 'hover:opacity-90'];
+        const activeClassesType = ['bg-primary', 'text-white', 'shadow-sm', 'hover:opacity-90'];
+
+        document.querySelectorAll('#levelFilters .filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#levelFilters .filter-btn').forEach(b => {
+                    b.classList.remove(...activeClassesLevel);
+                    b.classList.add(...inactiveClasses);
+                });
+                btn.classList.remove(...inactiveClasses);
+                btn.classList.add(...activeClassesLevel);
+                currentLevel = btn.getAttribute('data-filter');
+                filterScholarships();
+            });
+        });
+
+        document.querySelectorAll('#typeFilters .filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#typeFilters .filter-btn').forEach(b => {
+                    b.classList.remove(...activeClassesType);
+                    b.classList.add(...inactiveClasses);
+                });
+                btn.classList.remove(...inactiveClasses);
+                btn.classList.add(...activeClassesType);
+                currentType = btn.getAttribute('data-filter');
+                filterScholarships();
+            });
+        });
+    });
+
+    function filterScholarships() {
+        const container = document.getElementById('scholarships-container');
+        const emptyState = document.getElementById('empty-state');
+
+        const filtered = allScholarships.filter(s => {
+            const matchesSearch = s.title.toLowerCase().includes(searchQuery) ||
+                s.description.toLowerCase().includes(searchQuery) ||
+                s.eligibility.toLowerCase().includes(searchQuery);
+            const matchesLevel = currentLevel === 'all' || s.level.includes(currentLevel) || s.level === 'All Levels';
+            const matchesType = currentType === 'all' || s.type === currentType;
+
+            return matchesSearch && matchesLevel && matchesType;
+        });
+
+        if (filtered.length === 0) {
+            container.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+        } else {
+            emptyState.classList.add('hidden');
+            container.classList.remove('hidden');
+            container.innerHTML = filtered.map((s, i) => createScholarshipCard(s, i)).join('');
+        }
+    }
+
+    function createScholarshipCard(scholarship, index) {
+        // Staggered animation delay
+        const delay = index * 50;
+
+        // Use a hash of the ID to pick a consistent gradient
+        const gradients = [
+            'from-blue-500 to-indigo-500',
+            'from-emerald-500 to-green-500',
+            'from-orange-500 to-amber-500',
+            'from-pink-500 to-rose-500',
+            'from-purple-500 to-violet-500'
+        ];
+        const gradient = gradients[scholarship.id % gradients.length];
+
+        return `
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1 group border border-slate-100 dark:border-slate-700 flex flex-col h-full animate-fade-in-up transition-colors duration-300" style="animation-delay: ${delay}ms">
+                <div class="h-3 bg-gradient-to-r ${gradient}"></div>
+                <div class="p-6 flex flex-col flex-grow relative">
+                    <button onclick="toggleSave(event, ${scholarship.id})" id="save-btn-${scholarship.id}" 
+                        class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white dark:bg-slate-700 shadow-md flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-primary transition-all duration-300 z-10 group/btn"
+                        title="Save for later">
+                        <i class="far fa-bookmark text-lg transition-transform group-hover/btn:scale-110"></i>
+                    </button>
+                    
+                    <div class="flex justify-between items-start mb-4 pr-10">
+                        <span class="inline-block px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full text-xs font-semibold uppercase tracking-wide">
+                            ${scholarship.type}
+                        </span>
+                        <span class="text-primary font-bold whitespace-nowrap ml-2">${scholarship.amount}</span>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors line-clamp-2 min-h-[3.5rem]">
+                        ${scholarship.title}
+                    </h3>
+                    
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-3 flex-grow">
+                        ${scholarship.description}
+                    </p>
+                    
+                    <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6 mt-auto">
+                        <i class="far fa-clock text-slate-400 dark:text-slate-500"></i>
+                        <span>Deadline: <span class="font-medium text-slate-700 dark:text-slate-300">${scholarship.deadline}</span></span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between border-t border-slate-50 dark:border-slate-700 pt-4">
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider truncate max-w-[50%]">${scholarship.level}</span>
+                        <a href="/scholarship/${scholarship.id}" class="inline-flex items-center justify-center px-4 py-2 bg-white dark:bg-slate-700 border-2 border-primary text-primary dark:text-white rounded-lg font-semibold text-sm hover:bg-primary hover:text-white transition-all duration-300">
+                            View Details <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function toggleSave(event, id) {
+        event.preventDefault(); // Prevent card click if needed
+        event.stopPropagation(); // Stop bubbling
+
+        const btn = document.getElementById(`save-btn-${id}`);
+        const icon = btn.querySelector('i');
+
+        fetch(`/api/save/${id}`, { method: 'POST' })
+            .then(response => {
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.status === 'saved') {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas', 'text-primary');
+                    showToast('Scholarship saved!', 'success');
+                } else if (data && data.status === 'removed') {
+                    icon.classList.remove('fas', 'text-primary');
+                    icon.classList.add('far');
+                    showToast('Scholarship removed from saved.', 'info');
+                }
+            })
+            .catch(err => console.error('Error saving:', err));
+    }
+
+    // Check saved status after loading cards
+    function checkSavedStatus() {
+        const buttons = document.querySelectorAll('button[id^="save-btn-"]');
+        buttons.forEach(btn => {
+            const id = btn.id.split('-')[2];
+            fetch(`/api/check_saved/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.is_saved) {
+                        const icon = btn.querySelector('i');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas', 'text-primary');
+                    }
+                });
+        });
+    }
+
+    // Call checkSavedStatus after rendering cards in filterScholarships
+    // We'll hook into the filterScholarships function
+    const originalFilterScholarships = filterScholarships;
+    filterScholarships = function () {
+        originalFilterScholarships();
+        checkSavedStatus();
+    }
+</script>
+{% endblock %}
