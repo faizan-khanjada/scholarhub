@@ -5,13 +5,14 @@ import random
 
 DATABASE = os.path.join('instance', 'scholarhub.db')
 
-def get_db():
-    conn = sqlite3.connect(DATABASE)
+def get_db(db_path=None):
+    path = db_path if db_path else DATABASE
+    conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row
     return conn
 
-def populate_scholarships():
-    conn = get_db()
+def populate_scholarships(db_path=None):
+    conn = get_db(db_path)
     cursor = conn.cursor()
     
     # List of titles, descriptions, and types to mix and match
@@ -25,7 +26,7 @@ def populate_scholarships():
         "Quantum Computing Research", "Sports Medicine & Therapy"
     ]
     
-    types = ["Merit-Based", "Need-Based", "Research", "Athletic", "Service-Based", "Field-Specific"]
+    types = ["Merit-Based", "Need-Based", "Research", "Athletic"]
     levels = ["High School", "Undergraduate", "Graduate", "PhD", "All Levels"]
     # NSP style amounts: mostly annual, ranging from 6k to 50k
     amounts = ["₹60,000/year", "₹10,000/year", "₹12,000/year", "₹20,000/year", "₹25,000/year", "₹50,000/year", "₹70,000/year", "₹30,000/month"]

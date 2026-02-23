@@ -2,13 +2,15 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from authlib.integrations.flask_client import OAuth
 import secrets
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
+import random
 import sqlite3
 import os
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 from flask import send_from_directory, abort
 from email_utils import init_mail, send_contact_email
+from populate_db import populate_scholarships
 
 load_dotenv()
 
@@ -138,6 +140,19 @@ def init_db():
 
 
     
+    # Saved Scholarships table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS saved_scholarships (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            scholarship_id INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id),
+            FOREIGN KEY (scholarship_id) REFERENCES scholarships (id),
+            UNIQUE(user_id, scholarship_id)
+        )
+    ''')
+    
     # Check if admin exists in admins table
     cursor.execute("SELECT * FROM admins WHERE email = ?", ('admin@scholarhub.com',))
     existing_admin_in_admins = cursor.fetchone()
@@ -151,26 +166,17 @@ def init_db():
         )
         print("Created default admin account.")
 
-
+    # COMMIT tables and admin before calling external population script
+    # This prevents "database is locked" errors
+    conn.commit()
     
     # Check if scholarships exist, if not add sample data
-    # cursor.execute("SELECT COUNT(*) FROM scholarships")
-    # ... (rest of the sample data code commented out) ...
+    cursor.execute("SELECT COUNT(*) FROM scholarships")
+    if cursor.fetchone()[0] == 0:
+        print("Populating initial scholarships using populate_db.py...")
+        # Note: populate_scholarships handles its own connection and commit
+        populate_scholarships(DATABASE)
     
-    # Saved Scholarships table
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS saved_scholarships (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            scholarship_id INTEGER NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users (id),
-            FOREIGN KEY (scholarship_id) REFERENCES scholarships (id),
-            UNIQUE(user_id, scholarship_id)
-        )
-    ''')
-
-    conn.commit()
     conn.close()
 
 # Initialize database on startup
