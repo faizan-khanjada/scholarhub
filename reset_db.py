@@ -13,10 +13,10 @@ def reset_database():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     
-    print("Clearing tables (keeping scholarships)...")
+    print("Clearing all tables...")
     
     # Clear tables dependent on others first
-    tables_to_clear = ['documents', 'saved_scholarships', 'applications', 'users', 'admins']
+    tables_to_clear = ['documents', 'saved_scholarships', 'applications', 'users', 'scholarships', 'admins']
     
     for table in tables_to_clear:
         try:
@@ -49,6 +49,5 @@ def clear_uploads():
 if __name__ == '__main__':
     reset_database()
     clear_uploads()
-    print("\nReset Complete! Users, Applications, and Documents have been removed.")
-    print("Scholarships table was preserved.")
-    print("Restart your Flask app to recreate the default Admin account.")
+    print("\nReset Complete! All data has been removed.")
+    print("Restart your Flask app to recreate the default Admin account and initial scholarships.")
