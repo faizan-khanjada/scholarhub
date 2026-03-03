@@ -1,12 +1,30 @@
-Glassmorphism
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Glassmorphism Configuration */
+:root {
+    --nav-bg: rgba(255, 255, 255, 0.7);
+    --nav-border: rgba(255, 255, 255, 0.3);
+}
+
+.dark {
+    --nav-bg: rgba(15, 23, 42, 0.8);
+    --nav-border: rgba(51, 65, 85, 0.5);
+}
+
 .glass-nav {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--nav-border);
 }
 
 .glass-nav-scrolled {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--nav-bg);
+    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.1);
 }
 
 .glass-card {

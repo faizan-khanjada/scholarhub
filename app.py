@@ -183,9 +183,25 @@ def init_db():
 with app.app_context():
     init_db()
 
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    conn = get_db()
+    
+    # Get 3 latest scholarships
+    recent_scholarships = conn.execute('SELECT * FROM scholarships ORDER BY created_at DESC LIMIT 3').fetchall()
+    
+    # Convert Rows to dicts to handle fields properly
+    recent_scholarships_dicts = []
+    for s in recent_scholarships:
+        d = dict(s)
+        if 'type' not in d or not d['type']: 
+            d['type'] = 'Merit-Based'
+        recent_scholarships_dicts.append(d)
+        
+    conn.close()
+    
+    return render_template('index.html', recent_scholarships=recent_scholarships_dicts)
 
 @app.route('/scholarships')
 def scholarships_page():
@@ -210,9 +226,6 @@ def scholarship_detail(scholarship_id):
         # Ensure new fields exist even if migration failed or data is old
         if 'type' not in scholarship_dict or not scholarship_dict['type']:
             scholarship_dict['type'] = 'Merit-Based'
-        if 'level' not in scholarship_dict or not scholarship_dict['level']:
-            scholarship_dict['level'] = 'All Levels'
-            
         if 'level' not in scholarship_dict or not scholarship_dict['level']:
             scholarship_dict['level'] = 'All Levels'
             
@@ -264,6 +277,10 @@ def check_saved(scholarship_id):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    # Redirect already logged-in users
+    if 'user' in session:
+        return redirect(url_for('dashboard'))
+        
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
@@ -295,6 +312,10 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Redirect already logged-in users
+    if 'user' in session:
+        return redirect(url_for('dashboard') if not session.get('is_admin') else url_for('admin_dashboard'))
+        
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -561,8 +582,6 @@ def apply(scholarship_id):
             flash('At least one supporting document is required.', 'danger')
             return redirect(request.url)
 
-        application_id = cursor.lastrowid
-        uploaded_count = 0
 
         for file in files:
             if file and allowed_file(file.filename):
@@ -842,8 +861,6 @@ def fetch_external_scholarships():
     # Simulate fetching from an external API
     # In a real app, this would be: response = requests.get('https://api.example.com/scholarships')
     
-    import random
-    from datetime import datetime, timedelta
     
     # Generate some random "new" scholarships
     providers = ["TechFoundation", "GlobalEdu", "FutureScholars", "InnovateGrant", "EduSupport"]
