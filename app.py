@@ -184,6 +184,11 @@ with app.app_context():
     init_db()
 
 
+@app.context_processor
+def inject_now():
+    return {'now': datetime.now()}
+
+
 @app.route('/')
 def index():
     conn = get_db()
@@ -741,12 +746,10 @@ def delete_scholarship(scholarship_id):
 
 @app.route('/about')
 def about():
-    now = datetime.now()
-    return render_template('about.html', now=now)
+    return render_template('about.html')
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    now = datetime.now()
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
@@ -766,7 +769,7 @@ def contact():
             
         return redirect(url_for('contact'))
         
-    return render_template('contact.html', now=now)
+    return render_template('contact.html')
 
 @app.route('/application/<int:app_id>')
 def view_application(app_id):
