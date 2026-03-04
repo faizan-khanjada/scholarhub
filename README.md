@@ -1,4 +1,4 @@
-# 🎓 ScholarHub - Where Education Meets Opportunity
+# 🎓 ScholarHub - Scholarship Management System
 ScholarHub is a web-based scholarship management system that helps students discover and apply for relevant scholarships while enabling administrators to manage applications efficiently.
 
 ---
